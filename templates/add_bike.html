@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My Bikes{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="card bc-card">
+        <div class="card-header">Add a bike</div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('add_bike') }}" class="needs-validation" novalidate>
+            {% for name, label, ph in [('bike_number','Bike Number','e.g. TN25AB1234'),('brand','Brand','e.g. Royal Enfield'),('model','Model','e.g. Classic 350'),('year','Year','e.g. 2022'),('color','Color','e.g. Black')] %}
+            <div class="mb-3">
+              <label class="form-label" for="{{ name }}">{{ label }}</label>
+              <input type="{{ 'number' if name == 'year' else 'text' }}" class="form-control {{ 'is-invalid' if errors.get(name) }}"
+                     id="{{ name }}" name="{{ name }}" value="{{ form.get(name, '') }}" placeholder="{{ ph }}"
+                     {% if name == 'year' %}min="1980" max="2100"{% endif %} required>
+              <div class="invalid-feedback">{{ errors.get(name) or label ~ ' is required.' }}</div>
+            </div>
+            {% endfor %}
+            <div class="d-flex gap-2">
+              <button class="btn btn-accent" type="submit">Add Bike</button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('customer_dashboard') }}">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card bc-card">
+        <div class="card-header">My registered bikes</div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Number</th><th>Brand</th><th>Model</th><th>Year</th><th>Color</th></tr></thead>
+            <tbody>
+            {% for b in bikes %}
+              <tr><td><strong>{{ b.bike_number }}</strong></td><td>{{ b.brand }}</td><td>{{ b.model }}</td><td>{{ b.year }}</td><td>{{ b.color }}</td></tr>
+            {% else %}
+              <tr><td colspan="5" class="text-center text-muted py-4">You have not added any bikes yet.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

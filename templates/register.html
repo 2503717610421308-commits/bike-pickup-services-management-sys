@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card bc-card">
+        <div class="card-body p-4">
+          <h3 class="mb-1">Create your account</h3>
+          <p class="text-muted">Register to book services and pickups.</p>
+          <form method="post" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label" for="name">Full Name</label>
+              <input type="text" class="form-control {{ 'is-invalid' if errors.name }}" id="name" name="name" value="{{ form.name }}" required>
+              <div class="invalid-feedback">{{ errors.name or 'Full name is required.' }}</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="email">Email</label>
+              <input type="email" class="form-control {{ 'is-invalid' if errors.email }}" id="email" name="email" value="{{ form.email }}" required>
+              <div class="invalid-feedback">{{ errors.email or 'Enter a valid email address.' }}</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="phone">Phone Number</label>
+              <input type="tel" class="form-control {{ 'is-invalid' if errors.phone }}" id="phone" name="phone" value="{{ form.phone }}" pattern="\+?[0-9\s\-]{10,16}" required>
+              <div class="invalid-feedback">{{ errors.phone or 'Enter a valid phone number (10-13 digits).' }}</div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="form-control {{ 'is-invalid' if errors.password }}" id="password" name="password" minlength="6" required>
+                <div class="invalid-feedback">{{ errors.password or 'Password must be at least 6 characters.' }}</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="confirm_password">Confirm Password</label>
+                <input type="password" class="form-control {{ 'is-invalid' if errors.confirm_password }}" id="confirm_password" name="confirm_password" required>
+                <div class="invalid-feedback" id="confirmFeedback">{{ errors.confirm_password or 'Passwords do not match.' }}</div>
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" type="submit">Register</button>
+          </form>
+          <p class="text-center mt-3 mb-0">Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

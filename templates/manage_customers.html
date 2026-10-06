@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Manage Customers{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="page-title">Customers</h2>
+  <div class="card bc-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Registered Date</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for c in customers %}
+          <tr><td>{{ c.id }}</td><td>{{ c.name }}</td><td>{{ c.email }}</td><td>{{ c.phone }}</td><td>{{ c.created_at }}</td>
+            <td>
+              <form method="post" action="{{ url_for('delete_customer', user_id=c.id) }}" class="confirm-delete" data-message="Delete {{ c.name }} and all their bikes, bookings and pickups?">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Delete</button>
+              </form>
+            </td></tr>
+        {% else %}
+          <tr><td colspan="6" class="text-center text-muted py-4">No customers have registered yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="text-muted small mt-2">The admin account is not listed here and cannot be deleted.</p>
+</div>
+{% endblock %}

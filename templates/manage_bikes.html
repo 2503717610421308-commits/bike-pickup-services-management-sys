@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Manage Bikes{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="page-title">Bikes</h2>
+  <div class="card bc-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Bike ID</th><th>Customer Name</th><th>Bike Number</th><th>Brand</th><th>Model</th><th>Year</th><th>Color</th><th>Date Added</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for b in bikes %}
+          <tr><td>{{ b.id }}</td><td>{{ b.customer_name }}</td><td><strong>{{ b.bike_number }}</strong></td><td>{{ b.brand }}</td><td>{{ b.model }}</td><td>{{ b.year }}</td><td>{{ b.color }}</td><td>{{ b.created_at }}</td>
+            <td>
+              <form method="post" action="{{ url_for('delete_bike', bike_id=b.id) }}" class="confirm-delete" data-message="Delete bike {{ b.bike_number }} and its bookings and pickups?">
+                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Delete</button>
+              </form>
+            </td></tr>
+        {% else %}
+          <tr><td colspan="9" class="text-center text-muted py-4">No bikes registered yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

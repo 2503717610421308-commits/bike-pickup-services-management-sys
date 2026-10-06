@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Request Pickup{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card bc-card">
+        <div class="card-header">Request bike pickup</div>
+        <div class="card-body">
+          {% if errors.booking_id and not bookings %}<div class="alert alert-danger">{{ errors.booking_id }}</div>{% endif %}
+          {% if not bookings %}
+            <div class="alert alert-info mb-0">You have no bookings eligible for pickup. Cancelled bookings and bookings that already have a pickup are not listed. <a href="{{ url_for('book_service') }}">Book a service</a> first.</div>
+          {% else %}
+          <form method="post" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label" for="booking_id">Booking</label>
+              <select class="form-select {{ 'is-invalid' if errors.booking_id }}" id="booking_id" name="booking_id" required>
+                <option value="">Select a booking</option>
+                {% for b in bookings %}<option value="{{ b.id }}" {{ 'selected' if form.booking_id == b.id|string }}>#{{ b.id }} - {{ b.bike_number }} - {{ b.service_name }} ({{ b.booking_date }})</option>{% endfor %}
+              </select>
+              <div class="invalid-feedback">{{ errors.booking_id or 'Select a booking.' }}</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="pickup_address">Pickup Address</label>
+              <textarea class="form-control {{ 'is-invalid' if errors.pickup_address }}" id="pickup_address" name="pickup_address" rows="3" minlength="10" required>{{ form.pickup_address }}</textarea>
+              <div class="invalid-feedback">{{ errors.pickup_address or 'Enter the full pickup address.' }}</div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="pickup_date">Pickup Date</label>
+                <input type="date" class="form-control {{ 'is-invalid' if errors.pickup_date }}" id="pickup_date" name="pickup_date" min="{{ today }}" value="{{ form.pickup_date }}" required>
+                <div class="invalid-feedback">{{ errors.pickup_date or 'Choose a pickup date.' }}</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="pickup_time">Pickup Time</label>
+                <input type="time" class="form-control {{ 'is-invalid' if errors.pickup_time }}" id="pickup_time" name="pickup_time" value="{{ form.pickup_time }}" required>
+                <div class="invalid-feedback">{{ errors.pickup_time or 'Choose a pickup time.' }}</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="contact_phone">Contact Phone</label>
+              <input type="tel" class="form-control {{ 'is-invalid' if errors.contact_phone }}" id="contact_phone" name="contact_phone" value="{{ form.contact_phone }}" pattern="\+?[0-9\s\-]{10,16}" required>
+              <div class="invalid-feedback">{{ errors.contact_phone or 'Enter a valid phone number.' }}</div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-accent" type="submit">Request Pickup</button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('customer_dashboard') }}">Cancel</a>
+            </div>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

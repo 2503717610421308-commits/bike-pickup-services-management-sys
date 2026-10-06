@@ -1,0 +1,14 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+database.db
+*.sqlite
+*.sqlite3
+build/
+src/
+.settings/
+.classpath
+.project
+.idea/
+.vscode/

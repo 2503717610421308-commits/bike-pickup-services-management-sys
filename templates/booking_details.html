@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Booking #{{ b.id }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="page-title mb-0">Booking #{{ b.id }}</h2>
+    <a class="btn btn-outline-dark" href="{{ url_for('my_bookings') }}"><i class="bi bi-arrow-left"></i> Back</a>
+  </div>
+
+  <div class="card bc-card mb-4">
+    <div class="card-header">Service progress</div>
+    <div class="card-body">
+      {% if b.status == 'Cancelled' %}
+        <div class="alert alert-danger mb-0"><i class="bi bi-x-circle"></i> This booking was cancelled.</div>
+      {% else %}
+      <ol class="tracker">
+        {% for step in steps %}
+          <li class="{{ 'done' if loop.index0 < current }} {{ 'current' if loop.index0 == current }}">
+            <span class="dot">{% if loop.index0 < current %}<i class="bi bi-check-lg"></i>{% else %}{{ loop.index }}{% endif %}</span>
+            <span class="label">{{ step }}</span>
+          </li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card bc-card h-100"><div class="card-header"><i class="bi bi-person"></i> Customer Information</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Name:</strong> {{ b.customer_name }}</li>
+          <li class="list-group-item"><strong>Email:</strong> {{ b.email }}</li>
+          <li class="list-group-item"><strong>Phone:</strong> {{ b.phone }}</li>
+        </ul></div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bc-card h-100"><div class="card-header"><i class="bi bi-bicycle"></i> Bike Information</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Bike Number:</strong> {{ b.bike_number }}</li>
+          <li class="list-group-item"><strong>Brand:</strong> {{ b.brand }}</li>
+          <li class="list-group-item"><strong>Model:</strong> {{ b.model }}</li>
+          <li class="list-group-item"><strong>Year:</strong> {{ b.year }}</li>
+          <li class="list-group-item"><strong>Color:</strong> {{ b.color }}</li>
+        </ul></div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bc-card h-100"><div class="card-header"><i class="bi bi-tools"></i> Service Information</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Service:</strong> {{ b.service_name }}</li>
+          <li class="list-group-item"><strong>Description:</strong> {{ b.description }}</li>
+          <li class="list-group-item"><strong>Price:</strong> &#8377;{{ '%.2f'|format(b.price) }}</li>
+          <li class="list-group-item"><strong>Estimated Days:</strong> {{ b.estimated_days }}</li>
+        </ul></div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bc-card h-100"><div class="card-header"><i class="bi bi-journal-check"></i> Booking Information</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Booking ID:</strong> #{{ b.id }}</li>
+          <li class="list-group-item"><strong>Booking Date:</strong> {{ b.booking_date }}</li>
+          <li class="list-group-item"><strong>Preferred Time:</strong> {{ b.preferred_time }}</li>
+          <li class="list-group-item"><strong>Problem:</strong> {{ b.problem_description or 'Not provided' }}</li>
+          <li class="list-group-item"><strong>Status:</strong> <span class="badge status-badge {{ b.status|badge }}">{{ b.status }}</span></li>
+        </ul></div>
+    </div>
+    <div class="col-12">
+      <div class="card bc-card"><div class="card-header"><i class="bi bi-truck"></i> Pickup Information</div>
+        {% if pickup %}
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Address:</strong> {{ pickup.pickup_address }}</li>
+          <li class="list-group-item"><strong>Pickup Date:</strong> {{ pickup.pickup_date }}</li>
+          <li class="list-group-item"><strong>Pickup Time:</strong> {{ pickup.pickup_time }}</li>
+          <li class="list-group-item"><strong>Pickup Status:</strong> <span class="badge status-badge {{ pickup.status|badge }}">{{ pickup.status }}</span></li>
+        </ul>
+        {% else %}
+        <div class="card-body">No pickup requested for this booking.
+          {% if b.status != 'Cancelled' %}<a href="{{ url_for('pickup_request', booking_id=b.id) }}" class="btn btn-sm btn-accent ms-2">Request Pickup</a>{% endif %}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

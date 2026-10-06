@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Manage Pickups{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="page-title">Pickup requests</h2>
+  <div class="card bc-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Pickup ID</th><th>Booking ID</th><th>Customer</th><th>Phone</th><th>Address</th><th>Pickup Date</th><th>Pickup Time</th><th>Status</th><th>Update</th></tr></thead>
+        <tbody>
+        {% for p in pickups %}
+          <tr>
+            <td>#{{ p.id }}</td><td>#{{ p.booking_id }}</td><td>{{ p.customer_name }}</td><td>{{ p.contact_phone }}</td>
+            <td class="small">{{ p.pickup_address }}</td><td>{{ p.pickup_date }}</td><td>{{ p.pickup_time }}</td>
+            <td><span class="badge status-badge {{ p.status|badge }}">{{ p.status }}</span></td>
+            <td>
+              <form method="post" action="{{ url_for('update_pickup', pickup_id=p.id) }}" class="d-flex gap-1">
+                <select name="status" class="form-select form-select-sm status-select">
+                  {% for st in pickup_statuses %}<option value="{{ st }}" {{ 'selected' if st == p.status }}>{{ st }}</option>{% endfor %}
+                </select>
+                <button class="btn btn-sm btn-dark" type="submit">Update</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="9" class="text-center text-muted py-4">No pickup requests yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

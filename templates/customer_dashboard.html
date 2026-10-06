@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="page-title">Welcome, {{ session.name }}</h2>
+  <div class="row g-3 mb-4">
+    {% for icon, label, value, link in [('bicycle','My Bikes',stats.bikes,url_for('customer_bikes')),('journal-check','Total Bookings',stats.bookings,url_for('my_bookings')),('hourglass-split','Pending Bookings',stats.pending,url_for('my_bookings')),('check2-circle','Completed Services',stats.completed,url_for('my_bookings'))] %}
+    <div class="col-6 col-lg-3">
+      <a href="{{ link }}" class="text-decoration-none">
+        <div class="card stat-card h-100"><div class="card-body d-flex align-items-center gap-3">
+          <div class="stat-icon"><i class="bi bi-{{ icon }}"></i></div>
+          <div><div class="stat-value">{{ value }}</div><div class="stat-label">{{ label }}</div></div>
+        </div></div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    <a class="btn btn-accent" href="{{ url_for('add_bike') }}"><i class="bi bi-plus-circle"></i> Add Bike</a>
+    <a class="btn btn-dark" href="{{ url_for('book_service') }}"><i class="bi bi-wrench-adjustable"></i> Book Service</a>
+    <a class="btn btn-outline-dark" href="{{ url_for('pickup_request') }}"><i class="bi bi-truck"></i> Request Pickup</a>
+  </div>
+  <div class="card bc-card">
+    <div class="card-header">Recent bookings &amp; service history</div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>ID</th><th>Bike</th><th>Service</th><th>Date</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for b in recent %}
+          <tr><td>#{{ b.id }}</td><td>{{ b.bike_number }}</td><td>{{ b.service_name }}</td><td>{{ b.booking_date }}</td>
+            <td><span class="badge status-badge {{ b.status|badge }}">{{ b.status }}</span></td>
+            <td><a class="btn btn-sm btn-outline-dark" href="{{ url_for('booking_details', booking_id=b.id) }}">View Details</a></td></tr>
+        {% else %}
+          <tr><td colspan="6" class="text-center text-muted py-4">No bookings yet. <a href="{{ url_for('book_service') }}">Book your first service</a>.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

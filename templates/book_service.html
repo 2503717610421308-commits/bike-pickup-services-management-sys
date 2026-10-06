@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Book Service{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card bc-card">
+        <div class="card-header">Book a service</div>
+        <div class="card-body">
+          <form method="post" class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="bike_id">Bike</label>
+                <select class="form-select {{ 'is-invalid' if errors.bike_id }}" id="bike_id" name="bike_id" required>
+                  <option value="">Select your bike</option>
+                  {% for b in bikes %}<option value="{{ b.id }}" {{ 'selected' if form.bike_id == b.id|string }}>{{ b.bike_number }} - {{ b.brand }} {{ b.model }}</option>{% endfor %}
+                </select>
+                <div class="invalid-feedback">{{ errors.bike_id or 'Select your bike.' }}</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="service_id">Service</label>
+                <select class="form-select {{ 'is-invalid' if errors.service_id }}" id="service_id" name="service_id" required>
+                  <option value="">Select a service</option>
+                  {% for s in services %}<option value="{{ s.id }}" data-description="{{ s.description }}" data-price="{{ '%.2f'|format(s.price) }}" data-days="{{ s.estimated_days }}" {{ 'selected' if form.service_id == s.id|string }}>{{ s.service_name }}</option>{% endfor %}
+                </select>
+                <div class="invalid-feedback">{{ errors.service_id or 'Select a service.' }}</div>
+              </div>
+            </div>
+            <div id="serviceInfo" class="service-info d-none mb-3">
+              <p class="mb-1" id="svcDesc"></p>
+              <span class="me-3"><i class="bi bi-currency-rupee"></i> Price: <strong id="svcPrice"></strong></span>
+              <span><i class="bi bi-clock"></i> Estimated completion: <strong id="svcDays"></strong></span>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="booking_date">Booking Date</label>
+                <input type="date" class="form-control {{ 'is-invalid' if errors.booking_date }}" id="booking_date" name="booking_date" min="{{ today }}" value="{{ form.booking_date }}" required>
+                <div class="invalid-feedback">{{ errors.booking_date or 'Choose a booking date.' }}</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="preferred_time">Preferred Time</label>
+                <input type="time" class="form-control {{ 'is-invalid' if errors.preferred_time }}" id="preferred_time" name="preferred_time" value="{{ form.preferred_time }}" required>
+                <div class="invalid-feedback">{{ errors.preferred_time or 'Choose a preferred time.' }}</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="problem_description">Problem Description</label>
+              <textarea class="form-control" id="problem_description" name="problem_description" rows="3" placeholder="Describe any issues (optional)">{{ form.problem_description }}</textarea>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-accent" type="submit">Book Service</button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('customer_dashboard') }}">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

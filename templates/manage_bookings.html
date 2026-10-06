@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Manage Bookings{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="page-title">Service bookings</h2>
+  <div class="card bc-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Booking ID</th><th>Customer</th><th>Bike</th><th>Service</th><th>Booking Date</th><th>Time</th><th>Cost</th><th>Current Status</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for b in bookings %}
+          <tr>
+            <td>#{{ b.id }}</td><td>{{ b.customer_name }}</td>
+            <td>{{ b.bike_number }}<br><small class="text-muted">{{ b.brand }} {{ b.model }}</small></td>
+            <td>{{ b.service_name }}</td><td>{{ b.booking_date }}</td><td>{{ b.preferred_time }}</td>
+            <td>&#8377;{{ '%.2f'|format(b.estimated_cost) }}</td>
+            <td><span class="badge status-badge {{ b.status|badge }}">{{ b.status }}</span></td>
+            <td>
+              <form method="post" action="{{ url_for('update_booking', booking_id=b.id) }}" class="d-flex gap-1">
+                <select name="status" class="form-select form-select-sm status-select">
+                  {% for st in booking_statuses %}<option value="{{ st }}" {{ 'selected' if st == b.status }}>{{ st }}</option>{% endfor %}
+                </select>
+                <button class="btn btn-sm btn-dark" type="submit">Update</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="9" class="text-center text-muted py-4">No bookings yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

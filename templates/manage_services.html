@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Manage Services{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="page-title">Services</h2>
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card bc-card">
+        <div class="card-header">{{ 'Edit service #' ~ edit.id if edit else 'Add service' }}</div>
+        <div class="card-body">
+          <form method="post" action="{{ url_for('edit_service', service_id=edit.id) if edit else url_for('add_service') }}" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label class="form-label" for="service_name">Service Name</label>
+              <input class="form-control {{ 'is-invalid' if errors.service_name }}" id="service_name" name="service_name" value="{{ form.service_name }}" required>
+              <div class="invalid-feedback">{{ errors.service_name or 'Service name is required.' }}</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="description">Description</label>
+              <textarea class="form-control {{ 'is-invalid' if errors.description }}" id="description" name="description" rows="3" required>{{ form.description }}</textarea>
+              <div class="invalid-feedback">{{ errors.description or 'Description is required.' }}</div>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label class="form-label" for="price">Price (&#8377;)</label>
+                <input type="number" step="0.01" min="0" class="form-control {{ 'is-invalid' if errors.price }}" id="price" name="price" value="{{ form.price }}" required>
+                <div class="invalid-feedback">{{ errors.price or 'Enter a valid price.' }}</div>
+              </div>
+              <div class="col-6 mb-3">
+                <label class="form-label" for="estimated_days">Estimated Days</label>
+                <input type="number" min="1" class="form-control {{ 'is-invalid' if errors.estimated_days }}" id="estimated_days" name="estimated_days" value="{{ form.estimated_days }}" required>
+                <div class="invalid-feedback">{{ errors.estimated_days or 'Enter 1 or more days.' }}</div>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-accent" type="submit">{{ 'Save changes' if edit else 'Add Service' }}</button>
+              {% if edit %}<a class="btn btn-outline-secondary" href="{{ url_for('manage_services') }}">Cancel</a>{% endif %}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="card bc-card">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>ID</th><th>Service</th><th>Description</th><th>Price</th><th>Days</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for s in services %}
+              <tr><td>{{ s.id }}</td><td><strong>{{ s.service_name }}</strong></td><td class="small text-muted">{{ s.description }}</td>
+                <td>&#8377;{{ '%.2f'|format(s.price) }}</td><td>{{ s.estimated_days }}</td>
+                <td class="text-nowrap">
+                  <a class="btn btn-sm btn-outline-dark" href="{{ url_for('edit_service', service_id=s.id) }}"><i class="bi bi-pencil"></i></a>
+                  <form method="post" action="{{ url_for('delete_service', service_id=s.id) }}" class="d-inline confirm-delete" data-message="Delete service {{ s.service_name }}?">
+                    <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td></tr>
+            {% else %}
+              <tr><td colspan="6" class="text-center text-muted py-4">No services yet. Add one using the form.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="page-title mb-0">My bookings</h2>
+    <a class="btn btn-accent" href="{{ url_for('book_service') }}"><i class="bi bi-plus-circle"></i> New Booking</a>
+  </div>
+  <div class="card bc-card">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Booking ID</th><th>Bike</th><th>Service</th><th>Booking Date</th><th>Time</th><th>Estimated Cost</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for b in bookings %}
+          <tr>
+            <td>#{{ b.id }}</td><td>{{ b.bike_number }}<br><small class="text-muted">{{ b.brand }} {{ b.model }}</small></td>
+            <td>{{ b.service_name }}</td><td>{{ b.booking_date }}</td><td>{{ b.preferred_time }}</td>
+            <td>&#8377;{{ '%.2f'|format(b.estimated_cost) }}</td>
+            <td><span class="badge status-badge {{ b.status|badge }}">{{ b.status }}</span></td>
+            <td><a class="btn btn-sm btn-outline-dark" href="{{ url_for('booking_details', booking_id=b.id) }}">View Details</a></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="8" class="text-center text-muted py-4">You have no bookings yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
